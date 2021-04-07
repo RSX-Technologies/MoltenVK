@@ -48,7 +48,7 @@ void MVKPipelineLayout::bindDescriptorSets(MVKCommandEncoder* cmdEncoder,
 		MVKDescriptorSet* descSet = descriptorSets[dsIdx];
 		uint32_t dslIdx = firstSet + dsIdx;
 		MVKDescriptorSetLayout* dsl = _descriptorSetLayouts[dslIdx];
-		dsl->bindDescriptorSet(cmdEncoder, descSet, _dslMTLResourceIndexOffsets[dslIdx],
+		dsl->bindDescriptorSet(cmdEncoder, descSet, dslIdx, _dslMTLResourceIndexOffsets[dslIdx],
 							   dynamicOffsets, dynamicOffsetIndex);
 		if (!cmdEncoder) { setConfigurationResult(dsl->getConfigurationResult()); }
 	}
@@ -60,7 +60,7 @@ void MVKPipelineLayout::pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
                                           uint32_t set) {
 	if (!cmdEncoder) { clearConfigurationResult(); }
 	MVKDescriptorSetLayout* dsl = _descriptorSetLayouts[set];
-	dsl->pushDescriptorSet(cmdEncoder, descriptorWrites, _dslMTLResourceIndexOffsets[set]);
+	dsl->pushDescriptorSet(cmdEncoder, descriptorWrites, set, _dslMTLResourceIndexOffsets[set]);
 	if (!cmdEncoder) { setConfigurationResult(dsl->getConfigurationResult()); }
 }
 
@@ -71,7 +71,7 @@ void MVKPipelineLayout::pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
                                           const void* pData) {
 	if (!cmdEncoder) { clearConfigurationResult(); }
 	MVKDescriptorSetLayout* dsl = _descriptorSetLayouts[set];
-	dsl->pushDescriptorSet(cmdEncoder, descUpdateTemplate, pData, _dslMTLResourceIndexOffsets[set]);
+	dsl->pushDescriptorSet(cmdEncoder, descUpdateTemplate, set, pData, _dslMTLResourceIndexOffsets[set]);
 	if (!cmdEncoder) { setConfigurationResult(dsl->getConfigurationResult()); }
 }
 

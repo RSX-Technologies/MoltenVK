@@ -468,7 +468,7 @@ public:
     void bindViewRangeBuffer(const MVKShaderImplicitRezBinding& binding,
                              bool needVertexViewBuffer,
                              bool needFragmentViewBuffer);
-
+	
     void encodeBindings(MVKShaderStage stage,
                         const char* pStageName,
                         bool fullImageViewSwizzle,
@@ -477,6 +477,9 @@ public:
                         std::function<void(MVKCommandEncoder*, MVKMTLTextureBinding&)> bindTexture,
                         std::function<void(MVKCommandEncoder*, MVKMTLSamplerStateBinding&)> bindSampler);
 
+	/** Clears descriptor set bindings for the specified set index. */
+	void clearDescriptorSetBindings(uint32_t setIndex);
+	
 	/** Offset all buffers for vertex attribute bindings with zero divisors by the given number of strides. */
 	void offsetZeroDivisorVertexBuffers(MVKGraphicsStage stage, MVKGraphicsPipeline* pipeline, uint32_t firstInstance);
 
@@ -516,6 +519,9 @@ public:
     /** Sets the current buffer size buffer state. */
     void bindBufferSizeBuffer(const MVKShaderImplicitRezBinding& binding, bool needSizeBuffer);
 
+	/** Clears descriptor set bindings for the specified set index. */
+	void clearDescriptorSetBindings(uint32_t setIndex);
+	
     void markDirty() override;
 
 #pragma mark Construction

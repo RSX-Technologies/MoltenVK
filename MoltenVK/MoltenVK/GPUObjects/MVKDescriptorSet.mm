@@ -19,6 +19,7 @@
 #include "MVKDescriptorSet.h"
 #include "MVKInstance.h"
 #include "MVKOSExtensions.h"
+#include "MVKCommandBuffer.h"
 
 
 #pragma mark -
@@ -27,13 +28,19 @@
 // A null cmdEncoder can be passed to perform a validation pass
 void MVKDescriptorSetLayout::bindDescriptorSet(MVKCommandEncoder* cmdEncoder,
 											   MVKDescriptorSet* descSet,
+											   uint32 setIndex,
 											   MVKShaderResourceBinding& dslMTLRezIdxOffsets,
 											   MVKArrayRef<uint32_t> dynamicOffsets,
 											   uint32_t& dynamicOffsetIndex) {
 	if (!cmdEncoder) { clearConfigurationResult(); }
 	if ( !_isPushDescriptorLayout ) {
+		if (cmdEncoder) {
+			cmdEncoder->_computeResourcesState.clearDescriptorSetBindings(setIndex);
+			cmdEncoder->_graphicsResourcesState.clearDescriptorSetBindings(setIndex);
+		}
+		
 		for (auto& dslBind : _bindings) {
-			dslBind.bind(cmdEncoder, descSet, dslMTLRezIdxOffsets, dynamicOffsets, dynamicOffsetIndex);
+			dslBind.bind(cmdEncoder, descSet, setIndex, dslMTLRezIdxOffsets, dynamicOffsets, dynamicOffsetIndex);
 		}
 	}
 }
@@ -82,6 +89,7 @@ static const void* getWriteParameters(VkDescriptorType type, const VkDescriptorI
 // A null cmdEncoder can be passed to perform a validation pass
 void MVKDescriptorSetLayout::pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
                                                MVKArrayRef<VkWriteDescriptorSet>& descriptorWrites,
+											   uint32_t setIndex,
                                                MVKShaderResourceBinding& dslMTLRezIdxOffsets) {
 
     if (!_isPushDescriptorLayout) return;
@@ -118,7 +126,7 @@ void MVKDescriptorSetLayout::pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
             uint32_t descriptorsPushed = 0;
             uint32_t bindIdx = _bindingToIndex[dstBinding];
             _bindings[bindIdx].push(cmdEncoder, dstArrayElement, descriptorCount,
-                                    descriptorsPushed, descWrite.descriptorType,
+                                    descriptorsPushed, descWrite.descriptorType, setIndex,
                                     stride, pData, dslMTLRezIdxOffsets);
             pBufferInfo += descriptorsPushed;
             pImageInfo += descriptorsPushed;
@@ -130,6 +138,7 @@ void MVKDescriptorSetLayout::pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
 // A null cmdEncoder can be passed to perform a validation pass
 void MVKDescriptorSetLayout::pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
                                                MVKDescriptorUpdateTemplate* descUpdateTemplate,
+											   uint32_t setIndex,
                                                const void* pData,
                                                MVKShaderResourceBinding& dslMTLRezIdxOffsets) {
 
@@ -152,7 +161,7 @@ void MVKDescriptorSetLayout::pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
             uint32_t descriptorsPushed = 0;
             uint32_t bindIdx = _bindingToIndex[dstBinding];
             _bindings[bindIdx].push(cmdEncoder, dstArrayElement, descriptorCount,
-                                    descriptorsPushed, pEntry->descriptorType,
+                                    descriptorsPushed, pEntry->descriptorType, setIndex,
                                     pEntry->stride, pCurData, dslMTLRezIdxOffsets);
             pCurData = (const char*)pCurData + pEntry->stride * descriptorsPushed;
         }

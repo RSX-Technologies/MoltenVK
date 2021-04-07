@@ -47,6 +47,7 @@ public:
 	/** Encodes this descriptor set layout and the specified descriptor set on the specified command encoder. */
 	void bindDescriptorSet(MVKCommandEncoder* cmdEncoder,
 						   MVKDescriptorSet* descSet,
+						   uint32_t setIndex,
 						   MVKShaderResourceBinding& dslMTLRezIdxOffsets,
 						   MVKArrayRef<uint32_t> dynamicOffsets,
 						   uint32_t& dynamicOffsetIndex);
@@ -54,12 +55,14 @@ public:
 	/** Encodes this descriptor set layout and the specified descriptor updates on the specified command encoder immediately. */
 	void pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
 						   MVKArrayRef<VkWriteDescriptorSet>& descriptorWrites,
+						   uint32_t setIndex,
 						   MVKShaderResourceBinding& dslMTLRezIdxOffsets);
 
 
 	/** Encodes this descriptor set layout and the updates from the given template on the specified command encoder immediately. */
 	void pushDescriptorSet(MVKCommandEncoder* cmdEncoder,
 						   MVKDescriptorUpdateTemplate* descUpdateTemplates,
+						   uint32_t setIndex,
 						   const void* pData,
 						   MVKShaderResourceBinding& dslMTLRezIdxOffsets);
 

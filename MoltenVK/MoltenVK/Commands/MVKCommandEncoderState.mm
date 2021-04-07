@@ -473,6 +473,40 @@ void MVKResourcesCommandEncoderState::assertMissingSwizzles(bool needsSwizzle, c
 #pragma mark -
 #pragma mark MVKGraphicsResourcesCommandEncoderState
 
+void MVKGraphicsResourcesCommandEncoderState::clearDescriptorSetBindings(uint32_t setIndex)
+{
+	for(auto& shaderStageBindings : _shaderStageResourceBindings) {
+		for(auto& tb : shaderStageBindings.textureBindings) {
+			if(tb.setIndex != setIndex)
+				continue;
+			
+			shaderStageBindings.areTextureBindingsDirty = true;
+			tb.isDirty = true;
+			tb.mtlTexture = nil;
+		}
+		
+		for(auto& bb : shaderStageBindings.bufferBindings) {
+			if(bb.setIndex != setIndex)
+				continue;
+
+			shaderStageBindings.areBufferBindingsDirty = true;
+			bb.isDirty = true;
+			bb.mtlBuffer = nil;
+		}
+
+		for(auto& sb : shaderStageBindings.samplerStateBindings) {
+			if(sb.setIndex != setIndex)
+				continue;
+
+			shaderStageBindings.areSamplerStateBindingsDirty = true;
+			sb.isDirty = true;
+			sb.mtlSamplerState = nil;
+		}
+	}
+	
+	MVKCommandEncoderState::markDirty();
+}
+
 void MVKGraphicsResourcesCommandEncoderState::bindBuffer(MVKShaderStage stage, const MVKMTLBufferBinding& binding) {
     bind(binding, _shaderStageResourceBindings[stage].bufferBindings, _shaderStageResourceBindings[stage].areBufferBindingsDirty);
 }
@@ -768,6 +802,38 @@ void MVKGraphicsResourcesCommandEncoderState::encodeImpl(uint32_t stage) {
 
 #pragma mark -
 #pragma mark MVKComputeResourcesCommandEncoderState
+
+void MVKComputeResourcesCommandEncoderState::clearDescriptorSetBindings(uint32_t setIndex)
+{
+	for(auto& tb : _resourceBindings.textureBindings) {
+		if(tb.setIndex != setIndex)
+			continue;
+		
+		_resourceBindings.areTextureBindingsDirty = true;
+		tb.isDirty = true;
+		tb.mtlTexture = nil;
+	}
+	
+	for(auto& bb : _resourceBindings.bufferBindings) {
+		if(bb.setIndex != setIndex)
+			continue;
+
+		_resourceBindings.areBufferBindingsDirty = true;
+		bb.isDirty = true;
+		bb.mtlBuffer = nil;
+	}
+
+	for(auto& sb : _resourceBindings.samplerStateBindings) {
+		if(sb.setIndex != setIndex)
+			continue;
+
+		_resourceBindings.areSamplerStateBindingsDirty = true;
+		sb.isDirty = true;
+		sb.mtlSamplerState = nil;
+	}
+	
+	MVKCommandEncoderState::markDirty();
+}
 
 void MVKComputeResourcesCommandEncoderState::bindBuffer(const MVKMTLBufferBinding& binding) {
 	bind(binding, _resourceBindings.bufferBindings, _resourceBindings.areBufferBindingsDirty);

@@ -33,6 +33,7 @@ typedef struct {
     union { id<MTLTexture> mtlTexture = nil; id<MTLTexture> mtlResource; }; // aliases
     uint32_t swizzle = 0;
 	uint16_t index = 0;
+	uint32_t setIndex = 0;
     bool isDirty = true;
 } MVKMTLTextureBinding;
 
@@ -40,6 +41,7 @@ typedef struct {
 typedef struct {
     union { id<MTLSamplerState> mtlSamplerState = nil; id<MTLSamplerState> mtlResource; }; // aliases
     uint16_t index = 0;
+	uint32_t setIndex = 0;
     bool isDirty = true;
 } MVKMTLSamplerStateBinding;
 
@@ -49,6 +51,7 @@ typedef struct {
     VkDeviceSize offset = 0;
     uint32_t size = 0;
 	uint16_t index = 0;
+	uint32_t setIndex = 0;
     bool isDirty = true;
     bool isInline = false;
 } MVKMTLBufferBinding;

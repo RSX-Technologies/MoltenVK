@@ -44,6 +44,7 @@ VkResult MVKCmdBindVertexBuffers<N>::setContent(MVKCommandBuffer* cmdBuff,
         b.index = mvkDvc->getMetalBufferIndexForVertexAttributeBinding(startBinding + bindIdx);
         b.mtlBuffer = mvkBuffer->getMTLBuffer();
         b.offset = mvkBuffer->getMTLBufferOffset() + pOffsets[bindIdx];
+		b.setIndex = ~0u; // Not part of a descriptor set
         _bindings.push_back(b);
     }
 
