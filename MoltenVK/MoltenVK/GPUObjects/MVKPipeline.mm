@@ -423,7 +423,7 @@ MVKGraphicsPipeline::MVKGraphicsPipeline(MVKDevice* device,
 		_viewports.reserve(vpCnt);
 		for (uint32_t vpIdx = 0; vpIdx < vpCnt; vpIdx++) {
 			// If viewport is dyanamic, we still add a dummy so that the count will be tracked.
-			VkViewport vp;
+            VkViewport vp = { 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f };
 			if ( !_dynamicStateEnabled[VK_DYNAMIC_STATE_VIEWPORT] ) { vp = pVPState->pViewports[vpIdx]; }
 			_viewports.push_back(vp);
 		}
@@ -432,7 +432,7 @@ MVKGraphicsPipeline::MVKGraphicsPipeline(MVKDevice* device,
 		_scissors.reserve(sCnt);
 		for (uint32_t sIdx = 0; sIdx < sCnt; sIdx++) {
 			// If scissor is dyanamic, we still add a dummy so that the count will be tracked.
-			VkRect2D sc;
+            VkRect2D sc = { {0, 0}, {0, 0} };
 			if ( !_dynamicStateEnabled[VK_DYNAMIC_STATE_SCISSOR] ) { sc = pVPState->pScissors[sIdx]; }
 			_scissors.push_back(sc);
 		}

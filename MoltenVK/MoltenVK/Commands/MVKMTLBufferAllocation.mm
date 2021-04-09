@@ -90,9 +90,7 @@ const MVKMTLBufferAllocation* MVKMTLBufferAllocator::acquireMTLBufferRegion(NSUI
     NSUInteger p2Exp = mvkPowerOfTwoExponent(length);
 	MVKMTLBufferAllocationPool* pRP = _regionPools[p2Exp];
 	const MVKMTLBufferAllocation* region = _isThreadSafe ? pRP->acquireObjectSafely() : pRP->acquireObject();
-	if (region) {
-		[region->_mtlBuffer setPurgeableState: MTLPurgeableStateVolatile];
-	}
+
 	return region;
 }
 

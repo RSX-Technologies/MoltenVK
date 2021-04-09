@@ -492,6 +492,7 @@ void MVKGraphicsResourcesCommandEncoderState::clearDescriptorSetBindings(uint32_
 			shaderStageBindings.areBufferBindingsDirty = true;
 			bb.isDirty = true;
 			bb.mtlBuffer = nil;
+            bb.offset = 0;
 		}
 
 		for(auto& sb : shaderStageBindings.samplerStateBindings) {
