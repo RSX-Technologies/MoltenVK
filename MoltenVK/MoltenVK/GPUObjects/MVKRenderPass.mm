@@ -353,7 +353,7 @@ void MVKRenderSubpass::populateMTLRenderPassDescriptor(MTLRenderPassDescriptor* 
 #endif
 		mtlTexDesc.usage = MTLTextureUsageRenderTarget;
 		_mtlDummyTex = [_renderPass->getMTLDevice() newTextureWithDescriptor: mtlTexDesc];  // not retained
-		[_mtlDummyTex setPurgeableState: MTLPurgeableStateVolatile];
+
 		MTLRenderPassColorAttachmentDescriptor* mtlColorAttDesc = mtlRPDesc.colorAttachments[0];
 		mtlColorAttDesc.texture = _mtlDummyTex;
 		mtlColorAttDesc.level = 0;
